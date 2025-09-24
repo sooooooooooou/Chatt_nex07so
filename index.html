@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS Chat</title>
+    <style>
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #111111;
+            --input-bg: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --accent-color: #ffffff;
+            --border-color: #333333;
+            --microsoft-color: #0078d4;
+            --google-color: #4285f4;
+            --sidebar-width: 320px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        body {
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* ログイン画面 */
+        #login-page {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 0 20px;
+        }
+        
+        .login-card {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 40px 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        /* ソーシャルログインボタン - 白背景 */
+        .social-login {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        
+        .social-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: #ffffff; /* 白背景 */
+            color: #000000; /* 黒文字 */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .social-btn.microsoft {
+            border-color: var(--microsoft-color);
+        }
+        
+        .social-btn.google {
+            border-color: var(--google-color);
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-1px);
+            background: #f0f0f0; /* ホバー時も白系 */
+        }
+        
+        .social-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+        
+        /* その他のログインスタイルは前回と同じ */
+        .divider {
+            text-align: center;
+            position: relative;
+            margin: 25px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border-color);
+        }
+        
+        .divider span {
+            background: var(--secondary-bg);
+            padding: 0 15px;
+            position: relative;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-label {
+            display: block;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .remember-checkbox {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            accent-color: var(--accent-color);
+        }
+        
+        .remember-label {
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--text-primary);
+            color: var(--primary-bg);
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+        }
+        
+        .login-btn:hover {
+            background: #e0e0e0;
+            transform: translateY(-1px);
+        }
+        
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+        
+        .register-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .register-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .register-btn:hover {
+            border-color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .error-message {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #f44336;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+        
+        .register-form {
+            display: none;
+        }
+        
+        .back-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .back-btn:hover {
+            color: var(--text-primary);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* チャットアプリ画面 */
+        #chat-app {
+            height: 100vh;
+            display: none;
+        }
+        
+        .app-layout {
+            display: flex;
+            height: 100%;
+        }
+        
+        /* サイドバー */
+        #sidebar {
+            width: var(--sidebar-width);
+            background: var(--secondary-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .app-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .current-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #000;
+        }
+        
+        .user-info h3 {
+            font-size: 15px;
+            margin-bottom: 2px;
+        }
+        
+        .user-info span {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .user-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 0;
+        }
+        
+        .user-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .user-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-left-color: var(--accent-color);
+        }
+        
+        .user-item.active {
+            background: rgba(0, 212, 255, 0.1);
+            border-left-color: #00d4ff;
+        }
+        
+        .user-avatar-small {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--input-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 15px;
+            position: relative;
+        }
+        
+        .online-dot {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00ff88;
+            border: 2px solid var(--secondary-bg);
+        }
+        
+        .offline-dot {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text-secondary);
+            border: 2px solid var(--secondary-bg);
+        }
+        
+        .user-item-info {
+            flex: 1;
+        }
+        
+        .user-item-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .user-item-status {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        /* メインチャットエリア */
+        #chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--primary-bg);
+        }
+        
+        .chat-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .chat-partner-info {
+            margin-left: 15px;
+        }
+        
+        .chat-partner-name {
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .chat-partner-status {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            background: var(--primary-bg);
+        }
+        
+        .welcome-message {
+            text-align: center;
+            margin-top: 50px;
+            color: var(--text-secondary);
+        }
+        
+        .welcome-message h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .message {
+            max-width: 70%;
+            margin-bottom: 20px;
+            animation: messageSlide 0.3s ease-out;
+        }
+        
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .my-message {
+            margin-left: auto;
+        }
+        
+        .other-message {
+            margin-right: auto;
+        }
+        
+        .message-bubble {
+            padding: 12px 18px;
+            border-radius: 18px;
+            margin-bottom: 5px;
+            position: relative;
+        }
+        
+        .my-message .message-bubble {
+            background: linear-gradient(135deg, #00d4ff, #0099ff);
+            border-bottom-right-radius: 4px;
+            color: white;
+        }
+        
+        .other-message .message-bubble {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-align: right;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 5px;
+        }
+        
+        /* 既読機能のスタイル */
+        .read-status {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        
+        .read-status.read {
+            color: #00d4ff;
+        }
+        
+        .input-container {
+            padding: 20px 30px;
+            border-top: 1px solid var(--border-color);
+            background: var(--secondary-bg);
+        }
+        
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            padding: 5px;
+        }
+        
+        #chat-message-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            font-size: 15px;
+            outline: none;
+        }
+        
+        #chat-send-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #0099ff);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        #chat-send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.4);
+        }
+        
+        /* ログアウトボタン */
+        .logout-btn {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #f44336;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(244, 67, 54, 0.2);
+        }
+    </style>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+</head>
+<body>
+    <!-- ログインページ -->
+    <div id="login-page">
+        <div class="login-container">
+            <div class="login-card">
+                <!-- ログインフォーム -->
+                <div id="login-form">
+                    <div class="login-header">
+                        <h1 class="login-title">NEXUS Chat</h1>
+                        <p class="login-subtitle">アカウントにアクセス</p>
+                    </div>
+                    
+                    <!-- ソーシャルログインボタン - 白背景 -->
+                    <div class="social-login">
+                        <button id="microsoft-login" class="social-btn microsoft">
+                            <div class="social-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" style="fill:#1A1A1A;">
+                                    <path d="M 6 4 C 4.895 4 4 4.895 4 6 L 4 12 C 4 13.105 4.895 14 6 14 L 12 14 C 13.105 14 14 13.105 14 12 L 14 6 C 14 4.895 13.105 4 12 4 L 6 4 z M 18 4 C 16.895 4 16 4.895 16 6 L 16 12 C 16 13.105 16.895 14 18 14 L 24 14 C 25.105 14 26 13.105 26 12 L 26 6 C 26 4.895 25.105 4 24 4 L 18 4 z M 6 16 C 4.895 16 4 16.895 4 18 L 4 24 C 4 25.105 4.895 26 6 26 L 12 26 C 13.105 26 14 25.105 14 24 L 14 18 C 14 16.895 13.105 16 12 16 L 6 16 z M 18 16 C 16.895 16 16 16.895 16 18 L 16 24 C 16 25.105 16.895 26 18 26 L 24 26 C 25.105 26 26 25.105 26 24 L 26 18 C 26 16.895 25.105 16 24 16 L 18 16 z"></path>
+                                </svg>
+                            </div>
+                            Microsoft
+                        </button>
+                        <button id="google-login" class="social-btn google">
+                            <div class="social-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0,256,256" style="fill:#1a1a1a;">
+                                    <g fill="#1a1a1a" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+                                        <g transform="scale(8.53333,8.53333)">
+                                            <path d="M15.00391,3c-6.629,0 -12.00391,5.373 -12.00391,12c0,6.627 5.37491,12 12.00391,12c10.01,0 12.26517,-9.293 11.32617,-14h-1.33008h-2.26758h-7.73242v4h7.73828c-0.88958,3.44825 -4.01233,6 -7.73828,6c-4.418,0 -8,-3.582 -8,-8c0,-4.418 3.582,-8 8,-8c2.009,0 3.83914,0.74575 5.24414,1.96875l2.8418,-2.83984c-2.134,-1.944 -4.96903,-3.12891 -8.08203,-3.12891z"></path>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                            Google
+                        </button>
+                    </div>
+                    
+                    <div class="divider">
+                        <span>または</span>
+                    </div>
+                    
+                    <div id="error-message" class="error-message"></div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">メールアドレス</label>
+                        <input type="email" id="login-email" class="input-field" placeholder="mail@example.com">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">パスワード</label>
+                        <input type="password" id="login-password" class="input-field" placeholder="••••••••">
+                    </div>
+                    
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember-me" class="remember-checkbox">
+                        <label for="remember-me" class="remember-label">ログイン状態を保持</label>
+                    </div>
+                    
+                    <button id="login-btn" class="login-btn">ログイン</button>
+                    
+                    <div class="register-link">
+                        <p class="register-text">アカウントをお持ちではありませんか？</p>
+                        <button id="show-register" class="register-btn">新規登録</button>
+                    </div>
+                </div>
+                
+                <!-- 新規登録フォーム -->
+                <div id="register-form" class="register-form">
+                    <button id="back-to-login" class="back-btn">
+                        ← 戻る
+                    </button>
+                    
+                    <div class="login-header">
+                        <h1 class="login-title">新規登録</h1>
+                        <p class="login-subtitle">新しいアカウントを作成</p>
+                    </div>
+                    
+                    <!-- ソーシャル新規登録ボタン - 白背景 -->
+                    <div class="social-login">
+                        <button id="microsoft-register" class="social-btn microsoft">
+                            <div class="social-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" style="fill:#1A1A1A;">
+                                    <path d="M 6 4 C 4.895 4 4 4.895 4 6 L 4 12 C 4 13.105 4.895 14 6 14 L 12 14 C 13.105 14 14 13.105 14 12 L 14 6 C 14 4.895 13.105 4 12 4 L 6 4 z M 18 4 C 16.895 4 16 4.895 16 6 L 16 12 C 16 13.105 16.895 14 18 14 L 24 14 C 25.105 14 26 13.105 26 12 L 26 6 C 26 4.895 25.105 4 24 4 L 18 4 z M 6 16 C 4.895 16 4 16.895 4 18 L 4 24 C 4 25.105 4.895 26 6 26 L 12 26 C 13.105 26 14 25.105 14 24 L 14 18 C 14 16.895 13.105 16 12 16 L 6 16 z M 18 16 C 16.895 16 16 16.895 16 18 L 16 24 C 16 25.105 16.895 26 18 26 L 24 26 C 25.105 26 26 25.105 26 24 L 26 18 C 26 16.895 25.105 16 24 16 L 18 16 z"></path>
+                                </svg>
+                            </div>
+                            Microsoft
+                        </button>
+                        <button id="google-register" class="social-btn google">
+                            <div class="social-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0,256,256" style="fill:#1a1a1a;">
+                                    <g fill="#1a1a1a" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+                                        <g transform="scale(8.53333,8.53333)">
+                                            <path d="M15.00391,3c-6.629,0 -12.00391,5.373 -12.00391,12c0,6.627 5.37491,12 12.00391,12c10.01,0 12.26517,-9.293 11.32617,-14h-1.33008h-2.26758h-7.73242v4h7.73828c-0.88958,3.44825 -4.01233,6 -7.73828,6c-4.418,0 -8,-3.582 -8,-8c0,-4.418 3.582,-8 8,-8c2.009,0 3.83914,0.74575 5.24414,1.96875l2.8418,-2.83984c-2.134,-1.944 -4.96903,-3.12891 -8.08203,-3.12891z"></path>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                            Google
+                        </button>
+                    </div>
+                    
+                    <div class="divider">
+                        <span>または</span>
+                    </div>
+                    
+                    <div id="register-error" class="error-message"></div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">表示名</label>
+                        <input type="text" id="register-name" class="input-field" placeholder="ユーザー名">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">メールアドレス</label>
+                        <input type="email" id="register-email" class="input-field" placeholder="mail@example.com">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">パスワード</label>
+                        <input type="password" id="register-password" class="input-field" placeholder="••••••••（6文字以上）">
+                    </div>
+                    
+                    <button id="register-btn" class="login-btn">アカウント作成</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- チャットアプリ -->
+    <div id="chat-app">
+        <div class="app-layout">
+            <!-- 左サイドバー -->
+            <div id="sidebar">
+                <div class="sidebar-header">
+                    <div class="app-title">NEXUS</div>
+                    <div class="current-user">
+                        <div class="user-avatar" id="current-user-avatar">U</div>
+                        <div class="user-info">
+                            <h3 id="current-user-name">ユーザー名</h3>
+                            <span id="current-user-status">オンライン</span>
+                        </div>
+                    </div>
+                    <button class="logout-btn" id="sidebar-logout-btn">ログアウト</button>
+                </div>
+                
+                <div class="user-list" id="user-list">
+                    <!-- ユーザーリストは動的に生成 -->
+                </div>
+            </div>
+            
+            <!-- メインチャットエリア -->
+            <div id="chat-area">
+                <div class="chat-header">
+                    <div class="user-avatar" id="chat-user-avatar">💬</div>
+                    <div class="chat-partner-info">
+                        <div class="chat-partner-name" id="chat-partner-name">チャットを選択</div>
+                        <div class="chat-partner-status" id="chat-partner-status">ユーザーを選択して会話を開始</div>
+                    </div>
+                </div>
+                
+                <div class="messages-container" id="messages-container">
+                    <div class="welcome-message">
+                        <h3>会話を始めましょう</h3>
+                        <p>左側のリストからユーザーを選択してメッセージを送信してください</p>
+                    </div>
+                </div>
+                
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <input type="text" id="chat-message-input" placeholder="メッセージを入力...">
+                        <button id="chat-send-btn">↑</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase設定
+        const firebaseConfig = {
+            apiKey: "AIzaSyB4u_64UNKR-uHqmu7SxdYt5_K4b7d4y3Y",
+            authDomain: "line-9a637.firebaseapp.com",
+            databaseURL: "https://line-9a637-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "line-9a637",
+            storageBucket: "line-9a637.firebasestorage.app",
+            messagingSenderId: "778760430401",
+            appId: "1:778760430401:web:7ac4ad2c101f51307177c0",
+            measurementId: "G-9WR1TJ4TP3"
+        };
+        
+        // Firebaseの初期化
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const auth = firebase.auth();
+        
+        // プロバイダーの設定
+        const microsoftProvider = new firebase.auth.OAuthProvider('microsoft.com');
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+        
+        microsoftProvider.setCustomParameters({
+            prompt: 'consent',
+            tenant: 'common'
+        });
+        
+        googleProvider.addScope('email');
+        googleProvider.addScope('profile');
+        
+        // DOM要素の取得
+        const loginPage = document.getElementById('login-page');
+        const chatApp = document.getElementById('chat-app');
+        
+        // ログイン関連の要素
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const showRegisterBtn = document.getElementById('show-register');
+        const backToLoginBtn = document.getElementById('back-to-login');
+        const loginEmail = document.getElementById('login-email');
+        const loginPassword = document.getElementById('login-password');
+        const loginBtn = document.getElementById('login-btn');
+        const registerName = document.getElementById('register-name');
+        const registerEmail = document.getElementById('register-email');
+        const registerPassword = document.getElementById('register-password');
+        const registerBtn = document.getElementById('register-btn');
+        const errorMessage = document.getElementById('error-message');
+        const registerError = document.getElementById('register-error');
+        const microsoftLoginBtn = document.getElementById('microsoft-login');
+        const googleLoginBtn = document.getElementById('google-login');
+        const microsoftRegisterBtn = document.getElementById('microsoft-register');
+        const googleRegisterBtn = document.getElementById('google-register');
+        
+        // チャット関連の要素
+        const currentUserAvatar = document.getElementById('current-user-avatar');
+        const currentUserName = document.getElementById('current-user-name');
+        const userList = document.getElementById('user-list');
+        const messagesContainer = document.getElementById('messages-container');
+        const chatMessageInput = document.getElementById('chat-message-input');
+        const chatSendBtn = document.getElementById('chat-send-btn');
+        const chatPartnerName = document.getElementById('chat-partner-name');
+        const chatPartnerStatus = document.getElementById('chat-partner-status');
+        const chatUserAvatar = document.getElementById('chat-user-avatar');
+        const sidebarLogoutBtn = document.getElementById('sidebar-logout-btn');
+        
+        // 状態管理
+        let currentUser = null;
+        let chatPartner = null;
+        let messagesRef = null;
+        let usersRef = null;
+        let presenceRef = null;
+        
+        // 既読機能のための追加変数
+        let currentChatId = null;
+        let readStatusListeners = {};
+        
+        // チャットアプリの機能
+        function initializeChatApp(user) {
+            currentUser = user;
+            
+            // ユーザー情報を表示
+            currentUserAvatar.textContent = user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U';
+            currentUserName.textContent = user.displayName || 'ユーザー名';
+            
+            // オンライン状態を設定
+            setupUserPresence();
+            
+            // ユーザーリストを読み込み
+            loadUsers();
+        }
+        
+        function setupUserPresence() {
+            const uid = auth.currentUser.uid;
+            presenceRef = database.ref('status/' + uid);
+            
+            presenceRef.set({
+                online: true,
+                lastOnline: firebase.database.ServerValue.TIMESTAMP
+            });
+            
+            presenceRef.onDisconnect().set({
+                online: false,
+                lastOnline: firebase.database.ServerValue.TIMESTAMP
+            });
+            
+            database.ref('status').on('value', snapshot => {
+                if (snapshot.exists()) {
+                    updateUserStatus(snapshot.val());
+                }
+            });
+        }
+        
+        function loadUsers() {
+            usersRef = database.ref('users');
+            usersRef.on('value', snapshot => {
+                userList.innerHTML = '';
+                
+                snapshot.forEach(childSnapshot => {
+                    const user = childSnapshot.val();
+                    user.uid = childSnapshot.key;
+                    
+                    if (user.uid === auth.currentUser.uid) return;
+                    
+                    const userItem = document.createElement('div');
+                    userItem.className = 'user-item';
+                    userItem.setAttribute('data-user-id', user.uid);
+                    
+                    userItem.innerHTML = `
+                        <div class="user-avatar-small">
+                            ${user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U'}
+                            <div class="offline-dot"></div>
+                        </div>
+                        <div class="user-item-info">
+                            <div class="user-item-name">${user.displayName || '未設定'}</div>
+                            <div class="user-item-status">オフライン</div>
+                        </div>
+                    `;
+                    
+                    userItem.addEventListener('click', () => {
+                        document.querySelectorAll('.user-item').forEach(item => {
+                            item.classList.remove('active');
+                        });
+                        userItem.classList.add('active');
+                        openChat(user);
+                    });
+                    
+                    userList.appendChild(userItem);
+                });
+            });
+        }
+        
+        function updateUserStatus(statuses) {
+            document.querySelectorAll('.user-item').forEach(item => {
+                const userId = item.getAttribute('data-user-id');
+                const statusDot = item.querySelector('.offline-dot');
+                const statusText = item.querySelector('.user-item-status');
+                
+                if (statuses[userId] && statuses[userId].online) {
+                    if (statusDot) statusDot.className = 'online-dot';
+                    if (statusText) statusText.textContent = 'オンライン';
+                    
+                    if (chatPartner && chatPartner.uid === userId) {
+                        chatPartnerStatus.textContent = 'オンライン';
+                    }
+                } else {
+                    if (statusDot) statusDot.className = 'offline-dot';
+                    if (statusText) statusText.textContent = 'オフライン';
+                    
+                    if (chatPartner && chatPartner.uid === userId) {
+                        chatPartnerStatus.textContent = 'オフライン';
+                    }
+                }
+            });
+        }
+        
+        function openChat(user) {
+            chatPartner = user;
+            chatPartnerName.textContent = user.displayName;
+            chatUserAvatar.textContent = user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U';
+            chatPartnerStatus.textContent = 'オフライン';
+            
+            database.ref('status/' + user.uid).once('value').then(snapshot => {
+                if (snapshot.exists() && snapshot.val().online) {
+                    chatPartnerStatus.textContent = 'オンライン';
+                }
+            });
+            
+            messagesContainer.innerHTML = '';
+            setupMessageListener();
+        }
+        
+        function setupMessageListener() {
+            if (messagesRef) {
+                messagesRef.off();
+            }
+            
+            // 既読状態のリスナーをクリア
+            Object.values(readStatusListeners).forEach(listener => {
+                if (listener.off) listener.off();
+            });
+            readStatusListeners = {};
+            
+            const currentUserId = auth.currentUser.uid;
+            const partnerId = chatPartner.uid;
+            currentChatId = [currentUserId, partnerId].sort().join('_');
+            
+            messagesRef = database.ref('messages/' + currentChatId);
+            
+            messagesRef.orderByChild('timestamp').on('child_added', snapshot => {
+                const message = snapshot.val();
+                const messageId = snapshot.key;
+                addMessageToUI(message, messageId, message.senderId === currentUserId);
+                
+                // 相手からのメッセージの場合、自動で既読にする
+                if (message.senderId !== currentUserId && !message.read) {
+                    markMessageAsRead(messageId);
+                }
+            });
+        }
+        
+        function addMessageToUI(message, messageId, isMyMessage) {
+            // ウェルカムメッセージを削除
+            if (messagesContainer.querySelector('.welcome-message')) {
+                messagesContainer.innerHTML = '';
+            }
+            
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${isMyMessage ? 'my-message' : 'other-message'}`;
+            messageElement.setAttribute('data-message-id', messageId);
+            
+            const bubbleElement = document.createElement('div');
+            bubbleElement.className = 'message-bubble';
+            bubbleElement.textContent = message.text;
+            messageElement.appendChild(bubbleElement);
+            
+            const timeElement = document.createElement('div');
+            timeElement.className = 'message-time';
+            
+            const timestamp = new Date(message.timestamp);
+            const timeString = `${timestamp.getHours().toString().padStart(2, '0')}:${timestamp.getMinutes().toString().padStart(2, '0')}`;
+            
+            if (isMyMessage) {
+                // 自分のメッセージには既読状態を表示
+                const readStatusElement = document.createElement('span');
+                readStatusElement.className = 'read-status';
+                readStatusElement.textContent = message.read ? '既読' : '未読';
+                if (message.read) readStatusElement.classList.add('read');
+                
+                timeElement.appendChild(readStatusElement);
+                timeElement.innerHTML += ` ${timeString}`;
+                
+                // 既読状態の監視を開始
+                setupReadStatusListener(messageId, readStatusElement);
+            } else {
+                timeElement.textContent = timeString;
+            }
+            
+            messageElement.appendChild(timeElement);
+            messagesContainer.appendChild(messageElement);
+            scrollToBottom();
+        }
+        
+        function setupReadStatusListener(messageId, statusElement) {
+            if (readStatusListeners[messageId]) return;
+            
+            const messageRef = database.ref(`messages/${currentChatId}/${messageId}/read`);
+            readStatusListeners[messageId] = messageRef.on('value', snapshot => {
+                const isRead = snapshot.val();
+                statusElement.textContent = isRead ? '既読' : '未読';
+                if (isRead) {
+                    statusElement.classList.add('read');
+                } else {
+                    statusElement.classList.remove('read');
+                }
+            });
+        }
+        
+        function markMessageAsRead(messageId) {
+            const messageRef = database.ref(`messages/${currentChatId}/${messageId}`);
+            messageRef.update({
+                read: true,
+                readAt: firebase.database.ServerValue.TIMESTAMP
+            });
+        }
+        
+        function sendMessage() {
+            const messageText = chatMessageInput.value.trim();
+            if (!messageText || !chatPartner) return;
+            
+            const currentUserId = auth.currentUser.uid;
+            const partnerId = chatPartner.uid;
+            const chatId = [currentUserId, partnerId].sort().join('_');
+            
+            const messageData = {
+                text: messageText,
+                senderId: currentUserId,
+                receiverId: partnerId,
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                read: false
+            };
+            
+            const newMessageRef = database.ref('messages/' + chatId).push();
+            newMessageRef.set(messageData)
+                .then(() => {
+                    chatMessageInput.value = '';
+                })
+                .catch(error => {
+                    console.error('メッセージ送信エラー:', error);
+                });
+        }
+        
+        function scrollToBottom() {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // イベントリスナー
+        chatSendBtn.addEventListener('click', sendMessage);
+        chatMessageInput.addEventListener('keypress', e => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        sidebarLogoutBtn.addEventListener('click', () => {
+            // リスナーをクリア
+            Object.values(readStatusListeners).forEach(listener => {
+                if (listener.off) listener.off();
+            });
+            readStatusListeners = {};
+            
+            auth.signOut();
+        });
+        
+        // 認証状態の監視
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                loginPage.style.display = 'none';
+                chatApp.style.display = 'block';
+                
+                database.ref('users/' + user.uid).once('value').then(snapshot => {
+                    if (snapshot.exists()) {
+                        const userData = snapshot.val();
+                        userData.uid = user.uid;
+                        initializeChatApp(userData);
+                    }
+                });
+            } else {
+                loginPage.style.display = 'flex';
+                chatApp.style.display = 'none';
+            }
+        });
+
+        // ログイン機能
+        showRegisterBtn.addEventListener('click', () => {
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+            clearErrors();
+        });
+        
+        backToLoginBtn.addEventListener('click', () => {
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'block';
+            clearErrors();
+        });
+        
+        function clearErrors() {
+            errorMessage.style.display = 'none';
+            registerError.style.display = 'none';
+        }
+        
+        function showError(message, isRegister = false) {
+            const errorElement = isRegister ? registerError : errorMessage;
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        function setLoading(button, isLoading) {
+            if (isLoading) {
+                button.innerHTML = '<div class="loading"></div>';
+                button.disabled = true;
+            } else {
+                if (button.id.includes('microsoft')) {
+                    button.innerHTML = `
+                        <div class="social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" style="fill:#1A1A1A;">
+                                <path d="M 6 4 C 4.895 4 4 4.895 4 6 L 4 12 C 4 13.105 4.895 14 6 14 L 12 14 C 13.105 14 14 13.105 14 12 L 14 6 C 14 4.895 13.105 4 12 4 L 6 4 z M 18 4 C 16.895 4 16 4.895 16 6 L 16 12 C 16 13.105 16.895 14 18 14 L 24 14 C 25.105 14 26 13.105 26 12 L 26 6 C 26 4.895 25.105 4 24 4 L 18 4 z M 6 16 C 4.895 16 4 16.895 4 18 L 4 24 C 4 25.105 4.895 26 6 26 L 12 26 C 13.105 26 14 25.105 14 24 L 14 18 C 14 16.895 13.105 16 12 16 L 6 16 z M 18 16 C 16.895 16 16 16.895 16 18 L 16 24 C 16 25.105 16.895 26 18 26 L 24 26 C 25.105 26 26 25.105 26 24 L 26 18 C 26 16.895 25.105 16 24 16 L 18 16 z"></path>
+                            </svg>
+                        </div>
+                        Microsoft
+                    `;
+                } else if (button.id.includes('google')) {
+                    button.innerHTML = `
+                        <div class="social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0,256,256" style="fill:#1a1a1a;">
+                                <g fill="#1a1a1a" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+                                    <g transform="scale(8.53333,8.53333)">
+                                        <path d="M15.00391,3c-6.629,0 -12.00391,5.373 -12.00391,12c0,6.627 5.37491,12 12.00391,12c10.01,0 12.26517,-9.293 11.32617,-14h-1.33008h-2.26758h-7.73242v4h7.73828c-0.88958,3.44825 -4.01233,6 -7.73828,6c-4.418,0 -8,-3.582 -8,-8c0,-4.418 3.582,-8 8,-8c2.009,0 3.83914,0.74575 5.24414,1.96875l2.8418,-2.83984c-2.134,-1.944 -4.96903,-3.12891 -8.08203,-3.12891z"></path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        Google
+                    `;
+                } else {
+                    button.textContent = button.dataset.originalText;
+                }
+                button.disabled = false;
+            }
+        }
+        
+        function saveUserData(user, additionalData = {}) {
+            return database.ref('users/' + user.uid).set({
+                displayName: user.displayName || additionalData.displayName || 'ユーザー',
+                email: user.email,
+                photoURL: user.photoURL || additionalData.photoURL || '',
+                provider: user.providerData[0]?.providerId || 'password',
+                lastOnline: firebase.database.ServerValue.TIMESTAMP,
+                ...additionalData
+            });
+        }
+        
+        function signInWithMicrosoft(button) {
+            setLoading(button, true);
+            
+            auth.signInWithPopup(microsoftProvider)
+                .then((result) => {
+                    const user = result.user;
+                    return saveUserData(user);
+                })
+                .catch((error) => {
+                    setLoading(button, false);
+                    showError(getAuthErrorMessage(error));
+                });
+        }
+        
+        function signInWithGoogle(button) {
+            setLoading(button, true);
+            
+            auth.signInWithPopup(googleProvider)
+                .then((result) => {
+                    const user = result.user;
+                    return saveUserData(user);
+                })
+                .catch((error) => {
+                    setLoading(button, false);
+                    showError(getAuthErrorMessage(error));
+                });
+        }
+        
+        microsoftLoginBtn.addEventListener('click', () => signInWithMicrosoft(microsoftLoginBtn));
+        googleLoginBtn.addEventListener('click', () => signInWithGoogle(googleLoginBtn));
+        microsoftRegisterBtn.addEventListener('click', () => signInWithMicrosoft(microsoftRegisterBtn));
+        googleRegisterBtn.addEventListener('click', () => signInWithGoogle(googleRegisterBtn));
+        
+        loginBtn.addEventListener('click', () => {
+            const email = loginEmail.value.trim();
+            const password = loginPassword.value.trim();
+            
+            if (!email || !password) {
+                showError('メールアドレスとパスワードを入力してください');
+                return;
+            }
+            
+            setLoading(loginBtn, true);
+            loginBtn.dataset.originalText = loginBtn.textContent;
+            loginBtn.innerHTML = '<div class="loading"></div>';
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .catch((error) => {
+                    setLoading(loginBtn, false);
+                    showError(getAuthErrorMessage(error));
+                });
+        });
+        
+        registerBtn.addEventListener('click', () => {
+            const displayName = registerName.value.trim();
+            const email = registerEmail.value.trim();
+            const password = registerPassword.value.trim();
+            
+            if (!displayName || !email || !password) {
+                showError('すべての項目を入力してください', true);
+                return;
+            }
+            
+            if (password.length < 6) {
+                showError('パスワードは6文字以上で入力してください', true);
+                return;
+            }
+            
+            setLoading(registerBtn, true);
+            registerBtn.dataset.originalText = registerBtn.textContent;
+            registerBtn.innerHTML = '<div class="loading"></div>';
+            
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    return saveUserData(user, { displayName });
+                })
+                .catch((error) => {
+                    setLoading(registerBtn, false);
+                    showError(getAuthErrorMessage(error), true);
+                });
+        });
+        
+        [loginEmail, loginPassword, registerName, registerEmail, registerPassword].forEach(input => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    if (loginForm.style.display !== 'none') {
+                        loginBtn.click();
+                    } else {
+                        registerBtn.click();
+                    }
+                }
+            });
+        });
+        
+        function getAuthErrorMessage(error) {
+            switch (error.code) {
+                case 'auth/invalid-email': return 'メールアドレスの形式が正しくありません';
+                case 'auth/user-disabled': return 'このアカウントは無効化されています';
+                case 'auth/user-not-found': return 'アカウントが見つかりません';
+                case 'auth/wrong-password': return 'パスワードが間違っています';
+                case 'auth/email-already-in-use': return 'このメールアドレスは既に使用されています';
+                case 'auth/operation-not-allowed': return 'この操作は許可されていません';
+                case 'auth/weak-password': return 'パスワードが弱すぎます';
+                case 'auth/popup-closed-by-user': return 'ログインがキャンセルされました';
+                case 'auth/popup-blocked': return 'ポップアップがブロックされました。ポップアップを許可してください';
+                case 'auth/unauthorized-domain': return 'このドメインでは認証できません';
+                default: return 'エラーが発生しました: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
