@@ -83,8 +83,8 @@
             padding: 12px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            background: #ffffff; /* 白背景 */
-            color: #000000; /* 黒文字 */
+            background: #ffffff;
+            color: #000000;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
@@ -105,7 +105,7 @@
         
         .social-btn:hover {
             transform: translateY(-1px);
-            background: #f0f0f0; /* ホバー時も白系 */
+            background: #f0f0f0;
         }
         
         .social-icon {
@@ -114,7 +114,6 @@
             flex-shrink: 0;
         }
         
-        /* その他のログインスタイルは前回と同じ */
         .divider {
             text-align: center;
             position: relative;
@@ -297,6 +296,7 @@
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
+            height: 100vh;
         }
         
         .sidebar-header {
@@ -340,6 +340,48 @@
         .user-info span {
             font-size: 12px;
             color: var(--text-secondary);
+        }
+        
+        /* ユーザーアクションボタンのコンテナ */
+        .user-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        /* アカウント削除ボタン（左側） */
+        .delete-account-btn {
+            background: rgba(255, 82, 82, 0.1);
+            border: 1px solid rgba(255, 82, 82, 0.3);
+            color: #ff5252;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .delete-account-btn:hover {
+            background: rgba(255, 82, 82, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        /* ログアウトボタン（右側） */
+        .logout-btn {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #f44336;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(244, 67, 54, 0.2);
         }
         
         .user-list {
@@ -416,6 +458,34 @@
             color: var(--text-secondary);
         }
         
+        /* サイドバーフッター */
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+        
+        .about-creator-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .about-creator-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
         /* メインチャットエリア */
         #chat-area {
             flex: 1;
@@ -464,19 +534,19 @@
         }
         
         .message {
-            max-width: 70%;
-            margin-bottom: 20px;
+            max-width: 85%;
+            margin-bottom: 15px;
             animation: messageSlide 0.3s ease-out;
         }
         
         @keyframes messageSlide {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(10px) scale(0.95);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
         
@@ -489,10 +559,13 @@
         }
         
         .message-bubble {
-            padding: 12px 18px;
+            padding: 10px 16px;
             border-radius: 18px;
             margin-bottom: 5px;
             position: relative;
+            max-width: 100%;
+            word-wrap: break-word;
+            line-height: 1.4;
         }
         
         .my-message .message-bubble {
@@ -505,6 +578,11 @@
             background: var(--secondary-bg);
             border: 1px solid var(--border-color);
             border-bottom-left-radius: 4px;
+        }
+        
+        .message:hover .message-bubble {
+            transform: translateY(-1px);
+            transition: transform 0.2s ease;
         }
         
         .message-time {
@@ -570,23 +648,6 @@
         #chat-send-btn:hover {
             transform: scale(1.1);
             box-shadow: 0 4px 12px rgba(0, 212, 255, 0.4);
-        }
-        
-        /* ログアウトボタン */
-        .logout-btn {
-            background: rgba(244, 67, 54, 0.1);
-            border: 1px solid rgba(244, 67, 54, 0.3);
-            color: #f44336;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: all 0.3s ease;
-        }
-        
-        .logout-btn:hover {
-            background: rgba(244, 67, 54, 0.2);
         }
     </style>
     
@@ -736,11 +797,20 @@
                             <span id="current-user-status">オンライン</span>
                         </div>
                     </div>
-                    <button class="logout-btn" id="sidebar-logout-btn">ログアウト</button>
+                    <div class="user-actions">
+                        <button class="delete-account-btn" id="delete-account-btn">アカウント削除</button>
+                        <button class="logout-btn" id="sidebar-logout-btn">ログアウト</button>
+                    </div>
                 </div>
                 
                 <div class="user-list" id="user-list">
                     <!-- ユーザーリストは動的に生成 -->
+                </div>
+                
+                <div class="sidebar-footer">
+                    <button class="about-creator-btn" id="about-creator-btn">
+                        <span>作成者について</span>
+                    </button>
                 </div>
             </div>
             
@@ -774,14 +844,14 @@
     <script>
         // Firebase設定
         const firebaseConfig = {
-              apiKey: "AIzaSyBEDsCtZHapQIZJj5EG41PVD1ERMGIi7Og",
-  　　　　　　　authDomain: "line2-df12f.firebaseapp.com",
-  　　　　　　　databaseURL: "https://line2-df12f-default-rtdb.asia-southeast1.firebasedatabase.app",
-  　　　　　　　projectId: "line2-df12f",
-  　　　　　　　storageBucket: "line2-df12f.firebasestorage.app",
-  　　　　　　　messagingSenderId: "163161900339",
-  　　　　　　　appId: "1:163161900339:web:a9879970c4e06657f32a46",
-  　　　　　　　measurementId: "G-KXJXLL58R1"
+            apiKey: "AIzaSyBEDsCtZHapQIZJj5EG41PVD1ERMGIi7Og",
+            authDomain: "line2-df12f.firebaseapp.com",
+            databaseURL: "https://line2-df12f-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "line2-df12f",
+            storageBucket: "line2-df12f.firebasestorage.app",
+            messagingSenderId: "163161900339",
+            appId: "1:163161900339:web:a9879970c4e06657f32a46",
+            measurementId: "G-KXJXLL58R1"
         };
         
         // Firebaseの初期化
@@ -835,6 +905,8 @@
         const chatPartnerStatus = document.getElementById('chat-partner-status');
         const chatUserAvatar = document.getElementById('chat-user-avatar');
         const sidebarLogoutBtn = document.getElementById('sidebar-logout-btn');
+        const deleteAccountBtn = document.getElementById('delete-account-btn');
+        const aboutCreatorBtn = document.getElementById('about-creator-btn');
         
         // 状態管理
         let currentUser = null;
@@ -1103,6 +1175,137 @@
             
             auth.signOut();
         });
+        
+        // アカウント削除機能
+        deleteAccountBtn.addEventListener('click', function() {
+            if (confirm('本当にアカウントを削除しますか？この操作は元に戻せません。すべてのメッセージデータも削除されます。')) {
+                deleteUserAccount();
+            }
+        });
+        
+        // 作成者についてボタンのイベント
+        aboutCreatorBtn.addEventListener('click', function() {
+            window.open('https://sooooooooooou.github.io/introduse-my-self/', '_blank');
+        });
+        
+        async function deleteUserAccount() {
+            const user = auth.currentUser;
+            if (!user) return;
+        
+            const originalText = deleteAccountBtn.textContent;
+            
+            try {
+                // ボタンをローディング状態に
+                deleteAccountBtn.innerHTML = '<div class="loading"></div>';
+                deleteAccountBtn.disabled = true;
+        
+                // 確認のために再認証
+                let credential;
+                
+                // プロバイダーに応じて再認証方法を変更
+                if (user.providerData[0].providerId === 'password') {
+                    const password = prompt('アカウント削除のため、パスワードを入力してください:');
+                    if (!password) {
+                        deleteAccountBtn.textContent = originalText;
+                        deleteAccountBtn.disabled = false;
+                        return;
+                    }
+                    
+                    credential = firebase.auth.EmailAuthProvider.credential(user.email, password);
+                    await user.reauthenticateWithCredential(credential);
+                } else {
+                    // ソーシャルログインの場合はポップアップで再認証
+                    let provider;
+                    if (user.providerData[0].providerId === 'google.com') {
+                        provider = new firebase.auth.GoogleAuthProvider();
+                    } else if (user.providerData[0].providerId === 'microsoft.com') {
+                        provider = new firebase.auth.OAuthProvider('microsoft.com');
+                    }
+                    
+                    await user.reauthenticateWithPopup(provider);
+                }
+        
+                // ユーザーデータを削除
+                await deleteUserData(user.uid);
+                
+                // アカウント削除
+                await user.delete();
+                
+                alert('アカウントが正常に削除されました');
+                
+            } catch (error) {
+                console.error('アカウント削除エラー:', error);
+                
+                // ボタンを元に戻す
+                deleteAccountBtn.textContent = originalText;
+                deleteAccountBtn.disabled = false;
+                
+                switch (error.code) {
+                    case 'auth/requires-recent-login':
+                        alert('セキュリティのため、再度ログインしてください');
+                        auth.signOut();
+                        break;
+                    case 'auth/user-mismatch':
+                        alert('認証エラーが発生しました');
+                        break;
+                    case 'auth/network-request-failed':
+                        alert('ネットワークエラーが発生しました。接続を確認してください');
+                        break;
+                    default:
+                        alert('アカウント削除に失敗しました: ' + error.message);
+                }
+            }
+        }
+        
+        async function deleteUserData(uid) {
+            try {
+                // ユーザーデータを削除
+                await database.ref('users/' + uid).remove();
+                
+                // オンライン状態を削除
+                await database.ref('status/' + uid).remove();
+                
+                // メッセージデータを削除（バックグラウンドで実行）
+                deleteUserMessagesBackground(uid);
+                
+            } catch (error) {
+                console.error('ユーザーデータ削除エラー:', error);
+                throw error;
+            }
+        }
+        
+        function deleteUserMessagesBackground(uid) {
+            // バックグラウンドでメッセージ削除を実行
+            const messagesRef = database.ref('messages');
+            messagesRef.once('value').then(snapshot => {
+                const updates = {};
+                
+                snapshot.forEach(chatSnapshot => {
+                    const chatId = chatSnapshot.key;
+                    
+                    // ユーザーが関わるチャットルーム全体を削除
+                    if (chatId.includes(uid)) {
+                        updates[`messages/${chatId}`] = null;
+                    } else {
+                        // チャット内のユーザーのメッセージのみ削除
+                        chatSnapshot.forEach(messageSnapshot => {
+                            const message = messageSnapshot.val();
+                            if (message.senderId === uid) {
+                                updates[`messages/${chatId}/${messageSnapshot.key}`] = null;
+                            }
+                        });
+                    }
+                });
+                
+                if (Object.keys(updates).length > 0) {
+                    database.ref().update(updates).catch(error => {
+                        console.error('メッセージ削除エラー:', error);
+                    });
+                }
+            }).catch(error => {
+                console.error('メッセージ検索エラー:', error);
+            });
+        }
         
         // 認証状態の監視
         auth.onAuthStateChanged(user => {
